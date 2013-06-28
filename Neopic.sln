@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neopic.Console", "Neopic.Co
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neopic.Tests", "Neopic.Tests\Neopic.Tests.csproj", "{6F0970C8-5995-424B-AF22-45967D4E4BB7}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Neopic.Cortex", "Neopic.Cortex\Neopic.Cortex.csproj", "{9F98535D-C1A5-470F-98C6-D9F5BB8888E7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{6F0970C8-5995-424B-AF22-45967D4E4BB7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F0970C8-5995-424B-AF22-45967D4E4BB7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F0970C8-5995-424B-AF22-45967D4E4BB7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9F98535D-C1A5-470F-98C6-D9F5BB8888E7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9F98535D-C1A5-470F-98C6-D9F5BB8888E7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9F98535D-C1A5-470F-98C6-D9F5BB8888E7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9F98535D-C1A5-470F-98C6-D9F5BB8888E7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
