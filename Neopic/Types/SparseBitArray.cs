@@ -7,11 +7,18 @@ using System.Threading.Tasks;
 
 namespace Neopic.Types
 {
-    public class SparseBitArray : ICollection<bool>, IDictionary<int, bool>
+    public class SparseBitArray : IEnumerable<bool>
     {
         private readonly SortedSet<int> _set;
 
+        public SparseBitArray()
+        {
+            _set = new SortedSet<int>();
+        }
 
+        public SparseBitArray(int capacity)
+        {
+        }
 
         public bool this[int index]
         {
@@ -37,85 +44,28 @@ namespace Neopic.Types
 
         public void CopyTo(bool[] array, int arrayIndex)
         {
-            throw new NotImplementedException();
+            int offset = 0;
+            foreach (var index in _set)
+            {
+                offset = arrayIndex + index;
+                if (array.Length > offset)
+                    array[offset] = true;
+                else
+                    break;
+            }
         }
 
-        public int Count
+        public void UnionWith(SparseBitArray other)
         {
-            get { throw new NotImplementedException(); }
+            _set.UnionWith(other._set);
         }
-
-        public bool IsReadOnly
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public bool Remove(bool item)
-        {
-            throw new NotImplementedException();
-        }
-
+        
         public IEnumerator<bool> GetEnumerator()
         {
             throw new NotImplementedException();
         }
 
         IEnumerator IEnumerable.GetEnumerator()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Add(int key, bool value)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool ContainsKey(int key)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ICollection<int> Keys
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public bool Remove(int key)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool TryGetValue(int key, out bool value)
-        {
-            throw new NotImplementedException();
-        }
-
-        public ICollection<bool> Values
-        {
-            get { throw new NotImplementedException(); }
-        }
-
-        public void Add(KeyValuePair<int, bool> item)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Contains(KeyValuePair<int, bool> item)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void CopyTo(KeyValuePair<int, bool>[] array, int arrayIndex)
-        {
-            throw new NotImplementedException();
-        }
-
-        public bool Remove(KeyValuePair<int, bool> item)
-        {
-            throw new NotImplementedException();
-        }
-
-        IEnumerator<KeyValuePair<int, bool>> IEnumerable<KeyValuePair<int, bool>>.GetEnumerator()
         {
             throw new NotImplementedException();
         }

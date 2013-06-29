@@ -8,6 +8,5 @@ namespace Neopic.Contracts
 {
     public interface IModel
     {
-        SparseArray<bool> Input
     }
 }

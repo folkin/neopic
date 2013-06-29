@@ -6,8 +6,9 @@ using System.Threading.Tasks;
 
 namespace Neopic.Types
 {
-    public class SensoryData
+    public class ModelData
     {
-        public Dimensions Dimensions { get; }
+        public Dimensions Dimensions { get; set; }
+        public SparseBitArray Data { get; set; }
     }
 }
