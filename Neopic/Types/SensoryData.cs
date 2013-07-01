@@ -9,5 +9,6 @@ namespace Neopic.Types
     public class SensoryData
     {
         public Dimensions Dimensions { get; }
+        public SparseBitArray Data { get; }
     }
 }
