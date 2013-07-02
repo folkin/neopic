@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 
 namespace Neopic
 {
+    [ImmutableObject(true)]
     public struct Fraction
     {
         private readonly int _numerator;
@@ -20,17 +22,10 @@ namespace Neopic
 
         public Fraction(int numerator, int denominator)
         {
-            if (denominator == 0)
-                throw new ArgumentException("Attempt to create with invalid zero valued denominator", "denominator");
-
-            if (numerator > _overflow || numerator < -_overflow)
-                throw new ArgumentOutOfRangeException("_numerator", numerator, "Integer overflow");
-
-            if (denominator > _overflow || denominator < -_overflow)
-                throw new ArgumentOutOfRangeException("denominator", denominator, "Integer overflow");
-
+            Check.AreNotEqual(0, denominator);
             _numerator = denominator < 0 ? -numerator : numerator;
             _denominator = denominator < 0 ? -denominator : denominator;
+
         }
 
         public int Numerator
@@ -60,8 +55,7 @@ namespace Neopic
 
         public Fraction Reciprocal()
         {
-            if (_numerator == 0)
-                throw new DivideByZeroException();
+            Check.AreNotEqual(0, _numerator);
             return new Fraction(_numerator < 0 ? -_denominator : _denominator, _numerator < 0 ? -_numerator : _numerator);
         }
 

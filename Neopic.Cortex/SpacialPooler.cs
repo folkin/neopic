@@ -6,7 +6,11 @@ using System.Threading.Tasks;
 
 namespace Neopic
 {
-    class SpacialPooler
+    internal class SpacialPooler
     {
+        public SpacialPooler()
+        {
+            var arr = new SparseBitArray(-4);
+        }
     }
 }

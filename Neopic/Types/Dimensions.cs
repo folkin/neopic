@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
-using Neopic.Utility;
 
 namespace Neopic
 {
+    [ImmutableObject(true)]
     public sealed class Dimensions
     {
         private readonly int[] _dimensions;
@@ -28,10 +29,8 @@ namespace Neopic
 
         public Dimensions(IEnumerable<int> dimensions)
         {
-            Contract.Requires(() => dimensions != null, () => new ArgumentNullException("dimensions"));
-            Contract.Requires(() => dimensions.Count() > 0, () => new ArgumentException("At least one dimension must be specified.", "dimensions"));
-            Contract.Requires(() => dimensions.All(d => d > 0), () => new ArgumentException("Dimensions cannot be negative or zero.", "dimensions"));
-
+            Check.IsTrue(dimensions.Any(), "At least one dimension must be specified");
+            Check.IsTrue(dimensions.All(d => d > 0), "Only positive dimension values are allowed");
             _dimensions = dimensions.ToArray();
         }
 
