@@ -9,7 +9,7 @@ using Neopic.Prediction;
 
 namespace Neopic.Console
 {
-    public class Program
+    public class Program : IDisposable
     {
         private readonly CompositionContainer _container;
 
@@ -28,13 +28,21 @@ namespace Neopic.Console
         
         
         
+        void IDisposable.Dispose()
+        {
+            _container.Dispose();
+        }
+        
+        
         [STAThread]
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
             Instance = new Program();
 
+            return 0;
         }
 
         public static Program Instance { get; private set; }
+        
     }
 }

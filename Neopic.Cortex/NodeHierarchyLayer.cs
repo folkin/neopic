@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Neopic.Cortex
 {
-    public class Node
+    public class NodeHierarchyLevel
     {
-        public IList<Column> Columns { get; set; }
+        public IList<Node> Nodes { get; set; }
     }
 }

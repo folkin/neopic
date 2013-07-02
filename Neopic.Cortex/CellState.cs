@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace Neopic.Cortex
 {
-    public class Node
+    public enum CellState : byte
     {
-        public IList<Column> Columns { get; set; }
+        Inactive = 0,
+        Active = 1,
+        Predictive = 2,
     }
 }

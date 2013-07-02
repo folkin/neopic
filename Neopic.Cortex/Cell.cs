@@ -4,9 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Neopic
+namespace Neopic.Cortex
 {
-    class Cell
+    public class Cell
     {
+        public Column Column { get; set; }
+        public List<Dendrite> Dendrites { get; set; }
+        public CellState State { get; set; }
     }
 }

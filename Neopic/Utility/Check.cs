@@ -9,484 +9,127 @@ using System.Threading.Tasks;
 
 namespace Neopic
 {
-
     public static class Check
     {
         [Conditional("DEBUG")]
-        public static void IsTrue(bool condition)
-        {
-            Check.IsTrue(condition, string.Empty, (object[])null);
-        }
-
-        [Conditional("DEBUG")]
-        public static void IsTrue(bool condition, string message)
-        {
-            Check.IsTrue(condition, message, (object[])null);
-        }
-
-        [Conditional("DEBUG")]
-        public static void IsTrue(bool condition, string message, params object[] parameters)
-        {
-            if (condition)
-                return;
-            Check.HandleFail("Check.IsTrue", message, parameters);
-        }
-
-        [Conditional("DEBUG")]
-        public static void IsFalse(bool condition)
-        {
-            Check.IsFalse(condition, string.Empty, (object[])null);
-        }
-
-        [Conditional("DEBUG")]
-        public static void IsFalse(bool condition, string message)
-        {
-            Check.IsFalse(condition, message, (object[])null);
-        }
-
-        [Conditional("DEBUG")]
-        public static void IsFalse(bool condition, string message, params object[] parameters)
+        public static void ArgumentSatisfies(bool condition, string name = null)
         {
             if (!condition)
+                throw new ArgumentException(string.Format("Check Argument.Satisfies condition failed."));
+        }
+
+        [Conditional("DEBUG")]
+        public static void ArgumentIsNotNull<T>(T arg, string name = null) where T : class
+        {
+            if (arg == null)
+                throw new ArgumentNullException(name, "Check Argument.IsNotNull failed.");
+        }
+
+        [Conditional("DEBUG")]
+        public static void ArgumentIsNotEqual<T>(T arg, T value, string name = null) where T : IEquatable<T>
+        {
+            if (arg == null && value == null)
                 return;
-            Check.HandleFail("Check.IsFalse", message, parameters);
+            if (!arg.Equals(value))
+                throw new ArgumentException(string.Format("Check Argument.IsNotEqual failed.  Expected anything except:<{0}>  Actual:<{1}>", value, arg), name);
         }
 
         [Conditional("DEBUG")]
-        public static void IsNull(object value)
+        public static void ArgumentIsLessThan<T>(T arg, T value, string name = null) where T : IComparable<T>
         {
-            Check.IsNull(value, string.Empty, (object[])null);
+            if (arg.CompareTo(value) >= 0)
+                throw new ArgumentOutOfRangeException(string.Format("Check Argument.IsLessThan failed.  Expected anything less than:<{0}>  Actual:<{1}>", value, arg), name);
         }
 
         [Conditional("DEBUG")]
-        public static void IsNull(object value, string message)
+        public static void ArgumentIsLessThanOrEqual<T>(T arg, T value, string name = null) where T : IComparable<T>
         {
-            Check.IsNull(value, message, (object[])null);
+            if (arg.CompareTo(value) > 0)
+                throw new ArgumentOutOfRangeException(string.Format("Check Argument.IsLessThanOrEqual failed.  Expected anything less than or equal to:<{0}>  Actual:<{1}>", value, arg), name);
         }
 
         [Conditional("DEBUG")]
-        public static void IsNull(object value, string message, params object[] parameters)
+        public static void ArgumentIsGreaterThan<T>(T arg, T value, string name = null) where T : IComparable<T>
         {
-            if (value == null)
-                return;
-            Check.HandleFail("Check.IsNull", message, parameters);
+            if (arg.CompareTo(value) <= 0)
+                throw new ArgumentOutOfRangeException(string.Format("Check Argument.IsGreaterThan failed.  Expected anything greater than:<{0}>  Actual:<{1}>", value, arg), name);
         }
 
         [Conditional("DEBUG")]
-        public static void IsNotNull(object value)
+        public static void ArgumentIsGreaterThanOrEqual<T>(T arg, T value, string name = null) where T : IComparable<T>
         {
-            Check.IsNotNull(value, string.Empty, (object[])null);
+            if (arg.CompareTo(value) < 0)
+                throw new ArgumentOutOfRangeException(string.Format("Check Argument.IsLessThanOrEqual failed.  Expected anything greater than or equal to:<{0}>  Actual:<{1}>", value, arg), name);
+        }
+
+
+
+        [Conditional("DEBUG")]
+        public static void IndexIsInRange<T>(T arg, T min, T max) where T : IComparable<T>
+        {
+            if (arg.CompareTo(min) < 0)
+                throw new IndexOutOfRangeException(string.Format("Check Index.IsInRange failed.  Expected anything greater than or equal to:<{0}>  Actual:<{1}>", min, arg));
+            if (arg.CompareTo(max) >= 0)
+                throw new IndexOutOfRangeException(string.Format("Check Index.IsInRange failed.  Expected anything less than:<{0}>  Actual:<{1}>", max, arg));
+        }
+
+
+
+
+        [Conditional("DEBUG")]
+        public static void CollectionIsNotEmpty<T>(IEnumerable<T> collection, string name = null)
+        {
+            if (!collection.Any())
+                throw new ArgumentException(string.Format("Check Collection.IsNotEmpty failed."));
         }
 
         [Conditional("DEBUG")]
-        public static void IsNotNull(object value, string message)
+        public static void CollectionElementsSatisfy<T>(IEnumerable<T> collection, Func<T, bool> condition, string name = null)
         {
-            Check.IsNotNull(value, message, (object[])null);
-        }
-
-        [Conditional("DEBUG")]
-        public static void IsNotNull(object value, string message, params object[] parameters)
-        {
-            if (value != null)
-                return;
-            Check.HandleFail("Check.IsNotNull", message, parameters);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreSame(object expected, object actual)
-        {
-            Check.AreSame(expected, actual, string.Empty, (object[])null);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreSame(object expected, object actual, string message)
-        {
-            Check.AreSame(expected, actual, message, (object[])null);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreSame(object expected, object actual, string message, params object[] parameters)
-        {
-            if (object.ReferenceEquals(expected, actual))
-                return;
-            string message1 = message;
-            if (expected is ValueType && actual is ValueType)
-                message1 = (string)FrameworkMessages.AreSameGivenValues(message == null ? (object)string.Empty : (object)Check.ReplaceNulls((object)message));
-            Check.HandleFail("Check.AreSame", message1, parameters);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreNotSame(object notExpected, object actual)
-        {
-            Check.AreNotSame(notExpected, actual, string.Empty, (object[])null);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreNotSame(object notExpected, object actual, string message)
-        {
-            Check.AreNotSame(notExpected, actual, message, (object[])null);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreNotSame(object notExpected, object actual, string message, params object[] parameters)
-        {
-            if (!object.ReferenceEquals(notExpected, actual))
-                return;
-            Check.HandleFail("Check.AreNotSame", message, parameters);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreEqual<T>(T expected, T actual)
-        {
-            Check.AreEqual<T>(expected, actual, string.Empty, (object[])null);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreEqual<T>(T expected, T actual, string message)
-        {
-            Check.AreEqual<T>(expected, actual, message, (object[])null);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreEqual<T>(T expected, T actual, string message, params object[] parameters)
-        {
-            if (object.Equals((object)expected, (object)actual))
-                return;
-            Check.HandleFail("Check.AreEqual", (object)actual == null || (object)expected == null || actual.GetType().Equals(expected.GetType()) ? (string)FrameworkMessages.AreEqualFailMsg(message == null ? (object)string.Empty : (object)Check.ReplaceNulls((object)message), (object)Check.ReplaceNulls((object)expected), (object)Check.ReplaceNulls((object)actual)) : (string)FrameworkMessages.AreEqualDifferentTypesFailMsg(message == null ? (object)string.Empty : (object)Check.ReplaceNulls((object)message), (object)Check.ReplaceNulls((object)expected), (object)expected.GetType().FullName, (object)Check.ReplaceNulls((object)actual), (object)actual.GetType().FullName), parameters);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreNotEqual<T>(T notExpected, T actual)
-        {
-            Check.AreNotEqual<T>(notExpected, actual, string.Empty, (object[])null);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreNotEqual<T>(T notExpected, T actual, string message)
-        {
-            Check.AreNotEqual<T>(notExpected, actual, message, (object[])null);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreNotEqual<T>(T notExpected, T actual, string message, params object[] parameters)
-        {
-            if (!object.Equals((object)notExpected, (object)actual))
-                return;
-            Check.HandleFail("Check.AreNotEqual", (string)FrameworkMessages.AreNotEqualFailMsg(message == null ? (object)string.Empty : (object)Check.ReplaceNulls((object)message), (object)Check.ReplaceNulls((object)notExpected), (object)Check.ReplaceNulls((object)actual)), parameters);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreEqual(object expected, object actual)
-        {
-            Check.AreEqual(expected, actual, string.Empty, (object[])null);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreEqual(object expected, object actual, string message)
-        {
-            Check.AreEqual(expected, actual, message, (object[])null);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreEqual(object expected, object actual, string message, params object[] parameters)
-        {
-            Check.AreEqual<object>(expected, actual, message, parameters);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreNotEqual(object notExpected, object actual)
-        {
-            Check.AreNotEqual(notExpected, actual, string.Empty, (object[])null);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreNotEqual(object notExpected, object actual, string message)
-        {
-            Check.AreNotEqual(notExpected, actual, message, (object[])null);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreNotEqual(object notExpected, object actual, string message, params object[] parameters)
-        {
-            Check.AreNotEqual<object>(notExpected, actual, message, parameters);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreEqual(float expected, float actual, float epsilon)
-        {
-            Check.AreEqual(expected, actual, epsilon, string.Empty, (object[])null);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreEqual(float expected, float actual, float epsilon, string message)
-        {
-            Check.AreEqual(expected, actual, epsilon, message, (object[])null);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreEqual(float expected, float actual, float epsilon, string message, params object[] parameters)
-        {
-            if ((double)Math.Abs(expected - actual) <= (double)epsilon)
-                return;
-            Check.HandleFail("Check.AreEqual", (string)FrameworkMessages.AreEqualDeltaFailMsg(message == null ? (object)string.Empty : (object)Check.ReplaceNulls((object)message), (object)expected.ToString((IFormatProvider)CultureInfo.CurrentCulture.NumberFormat), (object)actual.ToString((IFormatProvider)CultureInfo.CurrentCulture.NumberFormat), (object)epsilon.ToString((IFormatProvider)CultureInfo.CurrentCulture.NumberFormat)), parameters);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreNotEqual(float notExpected, float actual, float epsilon)
-        {
-            Check.AreNotEqual(notExpected, actual, epsilon, string.Empty, (object[])null);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreNotEqual(float notExpected, float actual, float epsilon, string message)
-        {
-            Check.AreNotEqual(notExpected, actual, epsilon, message, (object[])null);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreNotEqual(float notExpected, float actual, float epsilon, string message, params object[] parameters)
-        {
-            if ((double)Math.Abs(notExpected - actual) > (double)epsilon)
-                return;
-            Check.HandleFail("Check.AreNotEqual", (string)FrameworkMessages.AreNotEqualDeltaFailMsg(message == null ? (object)string.Empty : (object)Check.ReplaceNulls((object)message), (object)notExpected.ToString((IFormatProvider)CultureInfo.CurrentCulture.NumberFormat), (object)actual.ToString((IFormatProvider)CultureInfo.CurrentCulture.NumberFormat), (object)epsilon.ToString((IFormatProvider)CultureInfo.CurrentCulture.NumberFormat)), parameters);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreEqual(double expected, double actual, double epsilon)
-        {
-            Check.AreEqual(expected, actual, epsilon, string.Empty, (object[])null);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreEqual(double expected, double actual, double epsilon, string message)
-        {
-            Check.AreEqual(expected, actual, epsilon, message, (object[])null);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreEqual(double expected, double actual, double epsilon, string message, params object[] parameters)
-        {
-            if (Math.Abs(expected - actual) <= epsilon)
-                return;
-            Check.HandleFail("Check.AreEqual", (string)FrameworkMessages.AreEqualDeltaFailMsg(message == null ? (object)string.Empty : (object)Check.ReplaceNulls((object)message), (object)expected.ToString((IFormatProvider)CultureInfo.CurrentCulture.NumberFormat), (object)actual.ToString((IFormatProvider)CultureInfo.CurrentCulture.NumberFormat), (object)epsilon.ToString((IFormatProvider)CultureInfo.CurrentCulture.NumberFormat)), parameters);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreNotEqual(double notExpected, double actual, double epsilon)
-        {
-            Check.AreNotEqual(notExpected, actual, epsilon, string.Empty, (object[])null);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreNotEqual(double notExpected, double actual, double epsilon, string message)
-        {
-            Check.AreNotEqual(notExpected, actual, epsilon, message, (object[])null);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreNotEqual(double notExpected, double actual, double epsilon, string message, params object[] parameters)
-        {
-            if (Math.Abs(notExpected - actual) > epsilon)
-                return;
-            Check.HandleFail("Check.AreNotEqual", (string)FrameworkMessages.AreNotEqualDeltaFailMsg(message == null ? (object)string.Empty : (object)Check.ReplaceNulls((object)message), (object)notExpected.ToString((IFormatProvider)CultureInfo.CurrentCulture.NumberFormat), (object)actual.ToString((IFormatProvider)CultureInfo.CurrentCulture.NumberFormat), (object)epsilon.ToString((IFormatProvider)CultureInfo.CurrentCulture.NumberFormat)), parameters);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreEqual(string expected, string actual, bool ignoreCase)
-        {
-            Check.AreEqual(expected, actual, ignoreCase, string.Empty, (object[])null);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreEqual(string expected, string actual, bool ignoreCase, string message)
-        {
-            Check.AreEqual(expected, actual, ignoreCase, message, (object[])null);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreEqual(string expected, string actual, bool ignoreCase, string message, params object[] parameters)
-        {
-            Check.AreEqual(expected, actual, ignoreCase, CultureInfo.InvariantCulture, message, parameters);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreEqual(string expected, string actual, bool ignoreCase, CultureInfo culture)
-        {
-            Check.AreEqual(expected, actual, ignoreCase, culture, string.Empty, (object[])null);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreEqual(string expected, string actual, bool ignoreCase, CultureInfo culture, string message)
-        {
-            Check.AreEqual(expected, actual, ignoreCase, culture, message, (object[])null);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreEqual(string expected, string actual, bool ignoreCase, CultureInfo culture, string message, params object[] parameters)
-        {
-            Check.CheckParameterNotNull((object)culture, "Check.AreEqual", "culture", string.Empty, new object[0]);
-            if (string.Compare(expected, actual, ignoreCase, culture) == 0)
-                return;
-            Check.HandleFail("Check.AreEqual", ignoreCase || string.Compare(expected, actual, true, culture) != 0 ? (string)FrameworkMessages.AreEqualFailMsg(message == null ? (object)string.Empty : (object)Check.ReplaceNulls((object)message), (object)Check.ReplaceNulls((object)expected), (object)Check.ReplaceNulls((object)actual)) : (string)FrameworkMessages.AreEqualCaseFailMsg(message == null ? (object)string.Empty : (object)Check.ReplaceNulls((object)message), (object)Check.ReplaceNulls((object)expected), (object)Check.ReplaceNulls((object)actual)), parameters);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreNotEqual(string notExpected, string actual, bool ignoreCase)
-        {
-            Check.AreNotEqual(notExpected, actual, ignoreCase, string.Empty, (object[])null);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreNotEqual(string notExpected, string actual, bool ignoreCase, string message)
-        {
-            Check.AreNotEqual(notExpected, actual, ignoreCase, message, (object[])null);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreNotEqual(string notExpected, string actual, bool ignoreCase, string message, params object[] parameters)
-        {
-            Check.AreNotEqual(notExpected, actual, ignoreCase, CultureInfo.InvariantCulture, message, parameters);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreNotEqual(string notExpected, string actual, bool ignoreCase, CultureInfo culture)
-        {
-            Check.AreNotEqual(notExpected, actual, ignoreCase, culture, string.Empty, (object[])null);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreNotEqual(string notExpected, string actual, bool ignoreCase, CultureInfo culture, string message)
-        {
-            Check.AreNotEqual(notExpected, actual, ignoreCase, culture, message, (object[])null);
-        }
-
-        [Conditional("DEBUG")]
-        public static void AreNotEqual(string notExpected, string actual, bool ignoreCase, CultureInfo culture, string message, params object[] parameters)
-        {
-            Check.CheckParameterNotNull((object)culture, "Check.AreNotEqual", "culture", string.Empty, new object[0]);
-            if (string.Compare(notExpected, actual, ignoreCase, culture) != 0)
-                return;
-            Check.HandleFail("Check.AreNotEqual", (string)FrameworkMessages.AreNotEqualFailMsg(message == null ? (object)string.Empty : (object)Check.ReplaceNulls((object)message), (object)Check.ReplaceNulls((object)notExpected), (object)Check.ReplaceNulls((object)actual)), parameters);
-        }
-
-        [Conditional("DEBUG")]
-        public static void IsInstanceOfType(object value, Type expectedType)
-        {
-            Check.IsInstanceOfType(value, expectedType, string.Empty, (object[])null);
-        }
-
-        [Conditional("DEBUG")]
-        public static void IsInstanceOfType(object value, Type expectedType, string message)
-        {
-            Check.IsInstanceOfType(value, expectedType, message, (object[])null);
-        }
-
-        [Conditional("DEBUG")]
-        public static void IsInstanceOfType(object value, Type expectedType, string message, params object[] parameters)
-        {
-            if (expectedType == null)
-                Check.HandleFail("Check.IsInstanceOfType", message, parameters);
-            if (expectedType.IsInstanceOfType(value))
-                return;
-            Check.HandleFail("Check.IsInstanceOfType", (string)FrameworkMessages.IsInstanceOfFailMsg(message == null ? (object)string.Empty : (object)Check.ReplaceNulls((object)message), (object)expectedType.ToString(), value == null ? (object)(string)FrameworkMessages.Common_NullInMessages : (object)value.GetType().ToString()), parameters);
-        }
-
-        [Conditional("DEBUG")]
-        public static void IsNotInstanceOfType(object value, Type wrongType)
-        {
-            Check.IsNotInstanceOfType(value, wrongType, string.Empty, (object[])null);
-        }
-
-        [Conditional("DEBUG")]
-        public static void IsNotInstanceOfType(object value, Type wrongType, string message)
-        {
-            Check.IsNotInstanceOfType(value, wrongType, message, (object[])null);
-        }
-
-        [Conditional("DEBUG")]
-        public static void IsNotInstanceOfType(object value, Type wrongType, string message, params object[] parameters)
-        {
-            if (wrongType == null)
-                Check.HandleFail("Check.IsNotInstanceOfType", message, parameters);
-            if (value == null || !wrongType.IsInstanceOfType(value))
-                return;
-            Check.HandleFail("Check.IsNotInstanceOfType", (string)FrameworkMessages.IsNotInstanceOfFailMsg(message == null ? (object)string.Empty : (object)Check.ReplaceNulls((object)message), (object)wrongType.ToString(), (object)value.GetType().ToString()), parameters);
-        }
-
-        public new static bool Equals(object objA, object objB)
-        {
-            throw new InvalidOperationException("Do not use Check.Equals");
-        }
-
-        internal static void HandleFail(string assertionName, string message, params object[] parameters)
-        {
-            string str = string.Empty;
-            if (!string.IsNullOrEmpty(message))
-                str = parameters != null ? string.Format(CultureInfo.CurrentCulture, Check.ReplaceNulls(message), parameters) : Check.ReplaceNulls(message);
-            throw new AssertFailedException(string.Format(CultureInfo.CurrentCulture, "{0}: {1}", assertionName, str));
-        }
-
-        internal static void CheckParameterNotNull(object param, string assertionName, string parameterName, string message, params object[] parameters)
-        {
-            if (param != null)
-                return;
-            Check.HandleFail(assertionName, FrameworkMessages.NullParameterToAssert(parameterName, message), parameters);
-        }
-
-        internal static string ReplaceNulls(object input)
-        {
-            if (input == null)
-                return FrameworkMessages.Common_NullInMessages.ToString();
-            string input1 = input.ToString();
-            if (input1 == null)
-                return FrameworkMessages.Common_ObjectString.ToString();
-            else
-                return Check.ReplaceNullChars(input1);
-        }
-
-        public static string ReplaceNullChars(string input)
-        {
-            if (string.IsNullOrEmpty(input))
-                return input;
-            List<int> list = new List<int>();
-            for (int index = 0; index < input.Length; ++index)
+            int index = 0;
+            foreach (T element in collection)
             {
-                if ((int)input[index] == 0)
-                    list.Add(index);
+                if (!condition(element))
+                    throw new ArgumentException(string.Format("Check Collection.ElementsSatisfy failed.  Actual element at {0} fails condition:<{1}>", index, element), name);
+                index++;
             }
-            if (list.Count <= 0)
-                return input;
-            StringBuilder stringBuilder = new StringBuilder(input.Length + list.Count);
-            int startIndex = 0;
-            foreach (int num in list)
-            {
-                stringBuilder.Append(input.Substring(startIndex, num - startIndex));
-                stringBuilder.Append("\\0");
-                startIndex = num + 1;
-            }
-            stringBuilder.Append(input.Substring(startIndex));
-            return ((object)stringBuilder).ToString();
+        }
+
+
+
+        [Conditional("DEBUG")]
+        public static void Condition(bool condition, string message = null)
+        {
+            Condition<CheckException>(condition, () => new CheckException(message));
+        }
+
+        [Conditional("DEBUG")]
+        public static void Condition<TException>(bool condition, Func<TException> exception) where TException : Exception
+        {
+            if (!condition)
+                throw exception();
         }
     }
 
+
     [Serializable]
-    public class AssertFailedException : Exception
+    public class CheckException : Exception
     {
-        public AssertFailedException()
+        public CheckException()
         {
         }
 
-        public AssertFailedException(string msg)
-            : base(msg)
+        public CheckException(string message)
+            : base(message)
         {
         }
 
-        public AssertFailedException(string msg, Exception ex)
-            : base(msg, ex)
+        public CheckException(string message, Exception innerException)
+            : base(message, innerException)
         {
         }
 
-        protected AssertFailedException(SerializationInfo info, StreamingContext context)
+        protected CheckException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
         }

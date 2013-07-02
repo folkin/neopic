@@ -22,7 +22,7 @@ namespace Neopic
 
         public Fraction(int numerator, int denominator)
         {
-            Check.AreNotEqual(0, denominator);
+            Check.ArgumentIsNotEqual(denominator, 0, "denominator");
             _numerator = denominator < 0 ? -numerator : numerator;
             _denominator = denominator < 0 ? -denominator : denominator;
 
@@ -55,7 +55,7 @@ namespace Neopic
 
         public Fraction Reciprocal()
         {
-            Check.AreNotEqual(0, _numerator);
+            Check.Condition<DivideByZeroException>(_numerator != 0, () => new DivideByZeroException("Check Condition failed.  Expected non-zero numerator.  Actual:<0>"));
             return new Fraction(_numerator < 0 ? -_denominator : _denominator, _numerator < 0 ? -_numerator : _numerator);
         }
 

@@ -6,8 +6,10 @@ using System.Threading.Tasks;
 
 namespace Neopic.Cortex
 {
-    public class Node
+    public class Synapse
     {
-        public IList<Column> Columns { get; set; }
+        public Dendrite Dendrite { get; set; }
+        public Cell Target { get; set; }
+        public byte Permanance { get; set; }
     }
 }

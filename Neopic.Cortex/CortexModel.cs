@@ -11,5 +11,8 @@ namespace Neopic.Cortex
     [Export(typeof(IModel))]
     public class CortexModel : IModel
     {
+        public NodeHierarchy Hierarchy { get; set; }
+
+
     }
 }

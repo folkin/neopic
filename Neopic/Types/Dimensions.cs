@@ -29,8 +29,9 @@ namespace Neopic
 
         public Dimensions(IEnumerable<int> dimensions)
         {
-            Check.IsTrue(dimensions.Any(), "At least one dimension must be specified");
-            Check.IsTrue(dimensions.All(d => d > 0), "Only positive dimension values are allowed");
+            Check.ArgumentIsNotNull(dimensions, "dimensions");
+            Check.CollectionIsNotEmpty(dimensions, "dimensions");
+            Check.CollectionElementsSatisfy(dimensions, d => d > 0, "dimensions");
             _dimensions = dimensions.ToArray();
         }
 

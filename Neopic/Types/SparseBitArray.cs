@@ -3,14 +3,19 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 
 namespace Neopic
 {
-    public class SparseBitArray : IEnumerable<bool>
+    public class SparseBitArray : IEnumerable<bool>, ICloneable
     {
         private readonly SortedSet<int> _set;
         private readonly int _length;
+
+        private SparseBitArray(SortedSet<int> set, int length)
+        {
+            _set = set;
+            _length = length;
+        }
 
         public SparseBitArray()
             : this (int.MaxValue)
@@ -19,8 +24,7 @@ namespace Neopic
 
         public SparseBitArray(int length)
         {
-            Check.IsTrue(length > 0);
-
+            Check.ArgumentIsGreaterThan(length, 0, "length");
             _set = new SortedSet<int>();
             _length = length;
 
@@ -30,11 +34,15 @@ namespace Neopic
         {
             get
             {
+                Check.IndexIsInRange(index, 0, _length);
                 return _set.Contains(index);
             }
             set
             {
-                _set.Add(index);
+                if (value)
+                    _set.Add(index);
+                else
+                    _set.Remove(index);
             }
         }
 
@@ -56,10 +64,7 @@ namespace Neopic
 
         public decimal Density
         {
-            get
-            {
-                return _set.Count / _length;
-            }
+            get { return _set.Count / _length; }
         }
 
         public void Clear()
@@ -67,8 +72,27 @@ namespace Neopic
             _set.Clear();
         }
 
+        public void CopyTo(BitArray bits, int arrayIndex)
+        {
+            Check.ArgumentIsNotNull(bits, "array");
+            Check.ArgumentIsGreaterThanOrEqual(arrayIndex, 0, "arrayIndex");
+            Check.ArgumentIsGreaterThanOrEqual(bits.Length, arrayIndex + _length, "array.Length");
+            int offset = 0;
+            foreach (var index in _set)
+            {
+                offset = arrayIndex + index;
+                if (bits.Length > offset)
+                    bits[offset] = true;
+                else
+                    break;
+            }
+        }
+
         public void CopyTo(bool[] array, int arrayIndex)
         {
+            Check.ArgumentIsNotNull(array, "array");
+            Check.ArgumentIsGreaterThanOrEqual(arrayIndex, 0, "arrayIndex");
+            Check.ArgumentIsGreaterThanOrEqual(array.Length, arrayIndex + _length, "array.Length");
             int offset = 0;
             foreach (var index in _set)
             {
@@ -79,11 +103,57 @@ namespace Neopic
                     break;
             }
         }
-
+        
         public void UnionWith(SparseBitArray other)
         {
+            Check.ArgumentIsLessThanOrEqual(other._length, _length, "other.Length");
             _set.UnionWith(other._set);
         }
+
+        public void IntersectWith(SparseBitArray other)
+        {
+            Check.ArgumentIsLessThanOrEqual(other._length, _length, "other.Length");
+            _set.IntersectWith(other._set);
+        }
+
+        public SparseBitArray And(SparseBitArray other)
+        {
+            var result = new SparseBitArray(Math.Max(_length, other._length));
+            result.UnionWith(this);
+            result.IntersectWith(other);
+            return result;
+        }
+
+        public SparseBitArray Or(SparseBitArray other)
+        {
+            var result = new SparseBitArray(Math.Max(_length, other._length));
+            result.UnionWith(this);
+            result.UnionWith(other);
+            return result;
+        }
+
+        public SparseBitArray Slice(int lower, int upper)
+        {
+            Check.IndexIsInRange(lower, 0, upper);
+            Check.IndexIsInRange(upper, lower, _length);
+            return new SparseBitArray(_set.GetViewBetween(lower, upper), upper - lower);
+        }
+
+        public SparseBitArray Concact(IEnumerable<SparseBitArray> bits)
+        {
+            int length = 0;
+            SortedSet<int> set = new SortedSet<int>();
+            foreach (var array in bits)
+            {
+                foreach (var index in array._set)
+                {
+                    set.Add(index + length);
+                }
+                length += array._length;
+            }
+            return new SparseBitArray(set, length);
+        }
+
 
         public IEnumerator<bool> GetEnumerator()
         {
@@ -93,6 +163,36 @@ namespace Neopic
         IEnumerator IEnumerable.GetEnumerator()
         {
             return Values.GetEnumerator();
+        }
+
+        public SparseBitArray Clone()
+        {
+            var set = new SortedSet<int>();
+            foreach (var index in _set)
+                set.Add(index);
+            return new SparseBitArray(set, _length);
+        }
+
+        object ICloneable.Clone()
+        {
+            return Clone();
+        }
+
+        public static implicit operator BitArray(SparseBitArray sparse)
+        {
+            var dense = new BitArray(sparse._length);
+            foreach (var bit in sparse._set)
+                dense[bit] = true;
+            return dense;
+        }
+
+        public static implicit operator SparseBitArray(BitArray dense)
+        {
+            var sparse = new SparseBitArray(dense.Length);
+            for (int i = 0; i < dense.Length; i++)
+                if (dense[i])
+                    sparse._set.Add(i);
+            return sparse;
         }
     }
 }
