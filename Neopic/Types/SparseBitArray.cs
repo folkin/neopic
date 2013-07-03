@@ -30,6 +30,20 @@ namespace Neopic
 
         }
 
+        public SparseBitArray(IEnumerable<bool> dense)
+        {
+            Check.ArgumentIsNotNull(dense, "dense");
+            _set = new SortedSet<int>();
+            int index = 0;
+            foreach (var bit in dense)
+            {
+                if (bit)
+                    _set.Add(index);
+                index++;
+            }
+            _length = index;
+        }
+
         public bool this[int index]
         {
             get
