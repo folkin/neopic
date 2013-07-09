@@ -59,6 +59,7 @@
     <Compile Include="Types\SparseArray.cs" />
     <Compile Include="Types\SparseBitArray.cs" />
     <Compile Include="Utility\Check.cs" />
+    <Compile Include="Types\ListExtensions.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

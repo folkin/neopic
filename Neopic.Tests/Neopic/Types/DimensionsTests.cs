@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Neopic.Tests.Neopic.Types
+namespace Neopic.Types.Tests
 {
     [TestClass]
     public class DimensionsTests

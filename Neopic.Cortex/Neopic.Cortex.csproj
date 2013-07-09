@@ -54,8 +54,8 @@
     <Compile Include="NodeHierarchy.cs" />
     <Compile Include="NodeHierarchyLayer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SpacialColumn.cs" />
-    <Compile Include="SpacialPooler.cs" />
+    <Compile Include="SpatialColumn.cs" />
+    <Compile Include="SpatialPooler.cs" />
     <Compile Include="Synapse.cs" />
     <Compile Include="TemporalPooler.cs" />
   </ItemGroup>

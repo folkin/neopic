@@ -10,6 +10,7 @@ namespace Neopic
     {
         private readonly SortedSet<int> _set;
         private readonly int _length;
+        private readonly int _offset;
 
         private SparseBitArray(SortedSet<int> set, int length)
         {
@@ -44,6 +45,13 @@ namespace Neopic
             _length = index;
         }
 
+        public SparseBitArray(IEnumerable<int> indices, int length)
+        {
+            Check.ArgumentIsNotNull(indices, "indices");
+            _set = new SortedSet<int>(indices);
+            _length = length;
+        }
+
         public bool this[int index]
         {
             get
@@ -65,6 +73,22 @@ namespace Neopic
             get { return _length; } 
         }
 
+        public int Min
+        {
+            get
+            {
+                return _set.Min;
+            }
+        }
+
+        public int Max
+        {
+            get
+            {
+                return _set.Max;
+            }
+        }
+
         public IEnumerable<bool> Values
         {
             get
@@ -79,6 +103,11 @@ namespace Neopic
         public decimal Density
         {
             get { return _set.Count / _length; }
+        }
+
+        public int Center
+        {
+            get { return (int)_set.Average(); }
         }
 
         public void Clear()
@@ -128,6 +157,33 @@ namespace Neopic
         {
             Check.ArgumentIsLessThanOrEqual(other._length, _length, "other.Length");
             _set.IntersectWith(other._set);
+        }
+
+        public int Intersect(SparseBitArray other)
+        {
+            int overlap = 0;
+            int max = this.Max;
+            int min = this.Min;
+
+            var e1 = _set.GetEnumerator();
+            var e2 = other._set.GetEnumerator();
+            bool end1 = !e1.MoveNext();
+            bool end2 = !e2.MoveNext();
+            while (!end1 && !end2 && e2.Current <= max)
+            {
+                int c = e1.Current.CompareTo(e2.Current);
+                if (c < 0)
+                    end1 = !e1.MoveNext();
+                else if (c > 0)
+                    end2 = !e2.MoveNext();
+                else
+                {
+                    overlap++;
+                    end1 = !e1.MoveNext();
+                    end2 = !e2.MoveNext();
+                }
+            }
+            return overlap;
         }
 
         public SparseBitArray And(SparseBitArray other)
