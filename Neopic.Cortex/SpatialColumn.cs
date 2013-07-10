@@ -8,6 +8,7 @@ namespace Neopic.Cortex
 {
     public class SpatialColumn
     {
+        public int Index { get; set; }
         public IDictionary<int, byte> Permanance { get; set; }
         public SparseBitArray Synapses { get; set; }
         public float DutyCycle { get; set; }
@@ -28,12 +29,6 @@ namespace Neopic.Cortex
                 int center = Center;
                 return Math.Max(Math.Abs(center - Synapses.Min), Math.Abs(center - Synapses.Max));
             }
-        }
-
-        public int FeedForwardOverlap(SparseBitArray input, int threshold)
-        {
-            var overlap = Synapses.Intersect(input);
-            return overlap < threshold ? 0 : overlap;
         }
     }
 }
