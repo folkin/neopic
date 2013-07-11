@@ -6,16 +6,25 @@ using System.Threading.Tasks;
 
 namespace Neopic.Cortex.Components
 {
-    public class RandomSpatialPooler : SpatialPooler
+    public class RandomSpatialPooler : ISpatialPooler
     {
-        private Random _rand = new Random();
+        private Range<int> _slice;
+        private readonly Random _random;
+        private int _maxActive;
 
-        public override void Process(IList<Column> columns, long timestamp, SparseBitArray input, int threshold)
+        public RandomSpatialPooler()
         {
-            foreach (var col in columns)
-            {
-                col.IsActive = _rand.Next(100) > 50;
-            }
+
+        }
+
+        public void Initialize(int capacity, Range<int> slice)
+        {
+            throw new NotImplementedException();
+        }
+
+        SparseBitArray ISpatialPooler.Process(long timestamp, SparseBitArray input)
+        {
+            throw new NotImplementedException();
         }
     }
 }

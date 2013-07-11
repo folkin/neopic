@@ -3,7 +3,7 @@ using System.Linq;
 using System.Collections.Generic;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Neopic.Types.Tests
+namespace Neopic.Linq.Tests
 {
     [TestClass]
     public class ListExtensionsTests

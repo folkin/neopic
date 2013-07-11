@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Contracts\IModel.cs" />
+    <Compile Include="Contracts\SystemParameters.cs" />
     <Compile Include="Types\Dimensions.cs" />
     <Compile Include="Types\Fraction.cs" />
     <Compile Include="Contracts\ISensoryInput.cs" />
@@ -56,10 +57,11 @@
       <Link>Properties\AssemblyVersion.cs</Link>
     </Compile>
     <Compile Include="Types\ModelData.cs" />
+    <Compile Include="Types\Range.cs" />
     <Compile Include="Types\SparseArray.cs" />
     <Compile Include="Types\SparseBitArray.cs" />
     <Compile Include="Utility\Check.cs" />
-    <Compile Include="Types\ListExtensions.cs" />
+    <Compile Include="Utility\ListExtensions.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
