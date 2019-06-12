@@ -62,6 +62,13 @@
     <Compile Include="Types\SparseBitArray.cs" />
     <Compile Include="Utility\Check.cs" />
     <Compile Include="Utility\ListExtensions.cs" />
+    <Compile Include="Types\SparseArray.cs" />
+    <Compile Include="Types\SparseBitArray.cs" />
+    <Compile Include="Utility\Check.cs" />
+    <Compile Include="Types\ListExtensions.cs" />
+    <Compile Include="Utility\ExpressionUtil.cs" />
+    <Compile Include="Utility\NullOp.cs" />
+    <Compile Include="Utility\Operator.cs" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
